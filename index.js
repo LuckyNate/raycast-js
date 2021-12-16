@@ -18,13 +18,13 @@ document.body.appendChild(canvas);
 
 const FOV = toRadians(80);
 
-const CELL_SIZE = 100;
+const CELL_SIZE = 1000;
 const COLORS = {
     rays: "#ffa60004",
-    wall: "#113311ff",
-    wallDark: "#002200ff",
-    floors: "#ffa600ff",
-    cieling: "#ccaaaaff"
+    wall: "#888888ff",
+    wallDark: "#666666ff",
+    floors: "#282828ff",
+    cieling: "#87ceebff"
 };
 
 const map = [
@@ -57,23 +57,34 @@ const player = {
     angle: 0,
     speed: 0,
     size: 16,
-    //raysize: 100
+    //raysize: 64
 }
 
 //=====================================================
 
 function clearScreen(){
-    ctx.fillStyle = "#000100";
+    ctx.fillStyle = "#282828ff";
     ctx.fillRect(0,0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
 //=====================================================
 
 function movePlayer(){
-
     player.x += Math.cos(player.angle) * player.speed;
-    player.y += Math.sin(player.angle) * player.speed;
+    if(player.x >= CELL_SIZE*map[0].length-(CELL_SIZE+8)){
+        player.x=CELL_SIZE*map[0].length-(CELL_SIZE+8);
+    }
+    if(player.x <= (CELL_SIZE+8)){
+        player.x = (CELL_SIZE+8);
+    }
     
+    player.y += Math.sin(player.angle) * player.speed;
+    if(player.y >= CELL_SIZE*map.length-(CELL_SIZE+8)){
+        player.y=CELL_SIZE*map.length-(CELL_SIZE+8);
+    }
+    if(player.y <= (CELL_SIZE+8)){
+        player.y = (CELL_SIZE+8);
+    }
 }
 
 //=====================================================
@@ -188,13 +199,13 @@ function fixFishEye(distance, angle, playerAngle){
 function renderScene(rays){
     rays.forEach((ray, i)=> {
         const distance = fixFishEye(ray.distance, ray.angle, player.angle);
-        const wallHeight = ((CELL_SIZE*8)/distance* 270);
+        const wallHeight = ((CELL_SIZE*3)/distance* 1000);
         ctx.fillStyle = ray.vertical 
-            ? COLORS.wallDark 
+            ? COLORS.wallDark
             : COLORS.wall;
         ctx.fillRect(i, SCREEN_HEIGHT/2-wallHeight/2, 1, wallHeight);
         ctx.fillStyle = COLORS.floors;
-        ctx.fillRect(i, SCREEN_HEIGHT/2 * wallHeight/2, 1, SCREEN_HEIGHT/2 + wallHeight)/2;
+        ctx.fillRect(i, SCREEN_HEIGHT/2 + wallHeight/2, 1, SCREEN_HEIGHT/2 + wallHeight)/2;
         ctx.fillStyle = COLORS.cieling;
         ctx.fillRect(i, 0, 1, SCREEN_HEIGHT/2 - wallHeight/2);
     });
@@ -207,7 +218,7 @@ function renderMinimap(posX, posY, scale, rays){
     map.forEach((row,y) => {
         row.forEach((cell, x) => {
             if(cell){
-                ctx.fillStyle = "#003300ff";
+                ctx.fillStyle = "#28282899";
                 ctx.fillRect(
                     posX + x * cellSize, 
                     posY + y * cellSize, 
@@ -215,7 +226,7 @@ function renderMinimap(posX, posY, scale, rays){
                 );
             }
             else {
-                ctx.fillStyle = "#ffffff44";
+                ctx.fillStyle = "#eeeeee66";
                 ctx.fillRect(
                     posX + x * cellSize, 
                     posY + y * cellSize, 
@@ -262,7 +273,7 @@ function gameLoop(){
     movePlayer();
     const rays = getRays();
     renderScene(rays);
-    renderMinimap(0,0,0.1,rays);
+    renderMinimap(0,0,0.01,rays);
 }
 
 requestAnimationFrame(gameLoop);
@@ -273,38 +284,38 @@ requestAnimationFrame(gameLoop);
 
 document.addEventListener("keydown", (e) =>{
     if(e.key === "w"){
-        if(player.speed > 6){
-            player.speed = 6;
+        if(player.speed > 142){
+            player.speed = 142;
         }
-        if((player.speed) < 6){
-            player.speed += 2;
+        if((player.speed) < 142){
+            player.speed += 35;
         }
     }
 
     if(e.key === "W"){
-        if(player.speed > 10){
-            player.speed = 10;
+        if(player.speed > 200){
+            player.speed = 200;
         }
-        if((player.speed) < 10){
-            player.speed += 10;
+        if((player.speed) < 200){
+            player.speed += 35;
         }
     }
 
     if(e.key === "s"){
-        if(player.speed < -6){
-            player.speed = -6;
+        if(player.speed < -142){
+            player.speed = -142;
         }
-        if((player.speed) > -6){
-            player.speed -= 2;
+        if((player.speed) > -142){
+            player.speed -= 35;
         }
     }
 
     if(e.key === "S"){
-        if(player.speed < -10){
-            player.speed = -10;
+        if(player.speed < -200){
+            player.speed = -200;
         }
-        if((player.speed) > -10){
-            player.speed -= 10;
+        if((player.speed) > -200){
+            player.speed -= 35;
         }
     }
     
