@@ -331,6 +331,6 @@ document.addEventListener("keyup", (e) =>{
 
 document.addEventListener("mousemove", (e) =>{
     
-    player.angle += toRadians(e.movementX)
+    player.angle += toRadians(e.movementX/2)
 })
 
