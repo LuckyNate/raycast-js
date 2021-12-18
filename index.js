@@ -19,6 +19,7 @@ document.body.appendChild(canvas);
 const FOV = toRadians(80);
 
 const CELL_SIZE = 1000;
+const m = CELL_SIZE;
 const COLORS = {
     rays: "#ffa60004",
     wall: "#888888ff",
@@ -71,19 +72,19 @@ function clearScreen(){
 
 function movePlayer(){
     player.x += Math.cos(player.angle) * player.speed;
-    if(player.x >= CELL_SIZE*map[0].length-(CELL_SIZE+8)){
-        player.x=CELL_SIZE*map[0].length-(CELL_SIZE+8);
+    if(player.x >= CELL_SIZE*map[0].length-(CELL_SIZE+player.size)){
+        player.x=CELL_SIZE*map[0].length-(CELL_SIZE+player.size);
     }
-    if(player.x <= (CELL_SIZE+8)){
-        player.x = (CELL_SIZE+8);
+    if(player.x <= (CELL_SIZE+player.size)){
+        player.x = (CELL_SIZE+player.size);
     }
     
     player.y += Math.sin(player.angle) * player.speed;
-    if(player.y >= CELL_SIZE*map.length-(CELL_SIZE+8)){
-        player.y=CELL_SIZE*map.length-(CELL_SIZE+8);
+    if(player.y >= CELL_SIZE*map.length-(CELL_SIZE+player.size)){
+        player.y=CELL_SIZE*map.length-(CELL_SIZE+player.size);
     }
-    if(player.y <= (CELL_SIZE+8)){
-        player.y = (CELL_SIZE+8);
+    if(player.y <= (CELL_SIZE+player.size)){
+        player.y = (CELL_SIZE+player.size);
     }
 }
 
@@ -283,39 +284,43 @@ requestAnimationFrame(gameLoop);
 
 
 document.addEventListener("keydown", (e) =>{
+    const fps = 60;
+    walkSpeed = 2.4*m;
+    runSpeed = 5.0*m;
+
     if(e.key === "w"){
-        if(player.speed > 142){
-            player.speed = 142;
+        if(player.speed > walkSpeed/fps){
+            player.speed = walkSpeed/fps;
         }
-        if((player.speed) < 142){
-            player.speed += 35;
+        if((player.speed) < walkSpeed/fps){
+            player.speed += walkSpeed/fps;
         }
     }
 
     if(e.key === "W"){
-        if(player.speed > 200){
-            player.speed = 200;
+        if(player.speed > runSpeed/fps){
+            player.speed = runSpeed/fps;
         }
-        if((player.speed) < 200){
-            player.speed += 35;
+        if((player.speed) < runSpeed/fps){
+            player.speed += runSpeed/fps;
         }
     }
 
     if(e.key === "s"){
-        if(player.speed < -142){
-            player.speed = -142;
+        if(player.speed < -walkSpeed/fps){
+            player.speed = -walkSpeed/fps;
         }
-        if((player.speed) > -142){
-            player.speed -= 35;
+        if((player.speed) > -walkSpeed/fps){
+            player.speed -= walkSpeed/fps;
         }
     }
 
     if(e.key === "S"){
-        if(player.speed < -200){
-            player.speed = -200;
+        if(player.speed < -runSpeed/fps){
+            player.speed = -runSpeed/fps;
         }
-        if((player.speed) > -200){
-            player.speed -= 35;
+        if((player.speed) > -runSpeed/fps){
+            player.speed -= runSpeed/fps;
         }
     }
     
