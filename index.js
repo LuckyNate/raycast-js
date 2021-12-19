@@ -15,7 +15,9 @@ canvas.setAttribute("width", SCREEN_WIDTH);
 canvas.setAttribute("height", SCREEN_HEIGHT);
 const ctx = canvas.getContext("2d");
 document.body.appendChild(canvas);
-
+//========================================================
+/* MAP CREATION AND HANDLING */
+//========================================================
 const FOV = toRadians(80);
 
 const CELL_SIZE = 1000;
@@ -28,7 +30,7 @@ const COLORS = {
     cieling: "#87ceebff"
 };
 
-const map = [
+const testmap = [
     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
     [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
     [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
@@ -50,6 +52,21 @@ const map = [
     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 ];
 
+function newmap(sizex, sizey){
+    tempmap = [];
+    for(let y = 0; y < sizey; y++){
+        newrow = [];
+        for(let x=0; x < sizex; x++){
+            (Math.random()*100) < 10
+            ? newrow.push(1)
+            : newrow.push(0);
+        }
+        tempmap.push(newrow);
+    }
+    return tempmap;
+}
+
+let map = newmap(20,20);
 //=====================================================
 
 const player = {
@@ -57,7 +74,7 @@ const player = {
     y: CELL_SIZE *1.5,
     angle: 0,
     speed: 0,
-    size: 16,
+    size: 0.5*m,
     //raysize: 64
 }
 
@@ -72,19 +89,21 @@ function clearScreen(){
 
 function movePlayer(){
     player.x += Math.cos(player.angle) * player.speed;
-    if(player.x >= CELL_SIZE*map[0].length-(CELL_SIZE+player.size)){
-        player.x=CELL_SIZE*map[0].length-(CELL_SIZE+player.size);
-    }
-    if(player.x <= (CELL_SIZE+player.size)){
-        player.x = (CELL_SIZE+player.size);
-    }
-    
     player.y += Math.sin(player.angle) * player.speed;
-    if(player.y >= CELL_SIZE*map.length-(CELL_SIZE+player.size)){
-        player.y=CELL_SIZE*map.length-(CELL_SIZE+player.size);
-    }
-    if(player.y <= (CELL_SIZE+player.size)){
-        player.y = (CELL_SIZE+player.size);
+    if(outOfMapBounds(player.x, player.y)){
+        player.x >= CELL_SIZE*map[0].length-(player.size)
+            ? player.x=CELL_SIZE*map[0].length-(player.size)
+            :player.x;
+        player.x <= (player.size)
+            ? player.x = (player.size)
+            :player.x;
+
+        player.y >= CELL_SIZE*map.length-(player.size)
+            ? player.y=CELL_SIZE*map.length-(player.size)
+            :player.y;
+        player.y <= player.size
+            ? player.y = (player.size)
+            :player.y;
     }
 }
 
@@ -99,7 +118,8 @@ function distance(x1, y1, x2, y2){
 }
 
 //=====================================================
-
+/* MEASURE VERTICAL COLLISION DISTANCE */
+//=====================================================
 function getVCollision(angle){
     const right = Math.abs(Math.floor((angle-Math.PI/2)/Math.PI)%2);
     const firstX = right 
@@ -134,6 +154,9 @@ function getVCollision(angle){
     return { angle, distance: distance(player.x, player.y, nextX, nextY), vertical: true }
 }
 
+//=====================================================
+/* MEASURE HORIZONTAL COLLISION DISTANCE */
+//=====================================================
 function getHCollision(angle){
     const up = Math.abs(Math.floor(angle/Math.PI)%2);
     const firstY = up 
@@ -169,7 +192,8 @@ function getHCollision(angle){
 }
 
 //=====================================================
-
+/* MAKE RAYS */
+//=====================================================
 function castRay(angle){
     const vCollision = getVCollision(angle);
     const hCollision = getHCollision(angle);
@@ -191,7 +215,8 @@ function getRays(){
 }
 
 //=====================================================
-
+/* MAIN SCENE RENDER */
+//=====================================================
 function fixFishEye(distance, angle, playerAngle){
     const diff = angle - playerAngle;
     return distance*Math.cos(diff);
@@ -213,7 +238,8 @@ function renderScene(rays){
 }
 
 //=====================================================
-
+/* MINIMAP */
+//=====================================================
 function renderMinimap(posX, posY, scale, rays){
     const cellSize = scale * CELL_SIZE;
     map.forEach((row,y) => {
