@@ -23,11 +23,11 @@ const FOV = toRadians(80);
 const CELL_SIZE = 1000;
 const m = CELL_SIZE;
 const COLORS = {
-    rays: "#ffa60004",
-    wall: "#888888ff",
-    wallDark: "#666666ff",
-    floors: "#282828ff",
-    cieling: "#87ceebff"
+    rays: "#ffffff04",
+    wall: "#eccca0ff",
+    wallDark: "#b57865ff",
+    floors: "#713c32ff",
+    cieling: "#bdad93ff"
 };
 
 const testmap = [
@@ -57,7 +57,7 @@ function newmap(sizex, sizey){
     for(let y = 0; y < sizey; y++){
         newrow = [];
         for(let x=0; x < sizex; x++){
-            (Math.random()*100) < 10
+            (Math.random()*100) < 8
             ? newrow.push(1)
             : newrow.push(0);
         }
