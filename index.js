@@ -23,10 +23,11 @@ const FOV = toRadians(80);
 const CELL_SIZE = 1000;
 const m = CELL_SIZE;
 const COLORS = {
-    rays: "#ffffff04",
+    rays: "#ffffff06",
     wall: "#eccca0ff",
     wallDark: "#b57865ff",
     floors: "#713c32ff",
+    minifloors: "#713c3244",
     cieling: "#bdad93ff"
 };
 
@@ -70,8 +71,8 @@ let map = newmap(20,20);
 //=====================================================
 
 const player = {
-    x: CELL_SIZE *1.5,
-    y: CELL_SIZE *1.5,
+    x: CELL_SIZE * map[0].length/2,
+    y: CELL_SIZE * map.length/2,
     angle: 0,
     speed: 0,
     size: 0.5*m,
@@ -82,6 +83,11 @@ const player = {
 
 function clearScreen(){
     ctx.fillStyle = "#282828ff";
+    ctx.fillRect(0,0, SCREEN_WIDTH, SCREEN_HEIGHT);
+}
+
+function fadeScreen(){
+    ctx.fillStyle = "#28282802";
     ctx.fillRect(0,0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
@@ -245,7 +251,7 @@ function renderMinimap(posX, posY, scale, rays){
     map.forEach((row,y) => {
         row.forEach((cell, x) => {
             if(cell){
-                ctx.fillStyle = "#28282899";
+                ctx.fillStyle = "#28282866";
                 ctx.fillRect(
                     posX + x * cellSize, 
                     posY + y * cellSize, 
@@ -253,12 +259,13 @@ function renderMinimap(posX, posY, scale, rays){
                 );
             }
             else {
-                ctx.fillStyle = "#eeeeee66";
+                ctx.fillStyle = COLORS.minifloors;
                 ctx.fillRect(
                     posX + x * cellSize, 
                     posY + y * cellSize, 
                     cellSize, cellSize
                 );
+                ctx.fillStyle = COLORS.minifloors;
                 ctx.fillRect(
                     posX + x * cellSize+1, 
                     posY + y * cellSize+1, 
@@ -282,8 +289,8 @@ function renderMinimap(posX, posY, scale, rays){
     
     ctx.fillStyle = "#00ff00ff";
     ctx.fillRect(
-        posX + player.x * scale - player.size*scale/2,
-        posY + player.y * scale - player.size*scale/2,
+        posX + player.x*scale - player.size*scale/2,
+        posY + player.y*scale - player.size*scale/2,
         player.size*scale, player.size*scale
         );
 }
@@ -301,6 +308,7 @@ function gameLoop(){
     const rays = getRays();
     renderScene(rays);
     renderMinimap(0,0,0.01,rays);
+    fadeScreen();
 }
 
 requestAnimationFrame(gameLoop);
