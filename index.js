@@ -92,10 +92,24 @@ function fadeScreen(){
 }
 
 //=====================================================
+function tileClip(){
+    let nexty = player.y + Math.sin(player.angle) * player.speed;
+    let nextx = player.x + Math.cos(player.angle) * player.speed;
+
+    let ytile = Math.floor(nexty/m);
+    let xtile = Math.floor(nextx/m); 
+
+    let mmy = nexty/m;
+    let mmx = nextx/m;
+    
+    if(map[ytile][xtile] === 0){
+        player.y = nexty;
+        player.x = nextx;
+    }
+}
 
 function movePlayer(){
-    player.x += Math.cos(player.angle) * player.speed;
-    player.y += Math.sin(player.angle) * player.speed;
+    tileClip();
     if(outOfMapBounds(player.x, player.y)){
         player.x >= CELL_SIZE*map[0].length-(player.size)
             ? player.x=CELL_SIZE*map[0].length-(player.size)
