@@ -99,12 +99,17 @@ function tileClip(){
     let ytile = Math.floor(nexty/m);
     let xtile = Math.floor(nextx/m); 
 
-    let mmy = nexty/m;
-    let mmx = nextx/m;
-    
     if(map[ytile][xtile] === 0){
         player.y = nexty;
         player.x = nextx;
+    }
+    else{
+        let disty = getHCollision(player.angle);
+        let distx = getVCollision(player.angle);
+        console.log(disty, distx)
+        distx.distance >= disty.distance
+            ? player.x = nextx
+            : player.y = nexty;
     }
 }
 
@@ -245,7 +250,7 @@ function fixFishEye(distance, angle, playerAngle){
 function renderScene(rays){
     rays.forEach((ray, i)=> {
         const distance = fixFishEye(ray.distance, ray.angle, player.angle);
-        const wallHeight = ((CELL_SIZE*3)/distance* 1000);
+        const wallHeight = ((CELL_SIZE*3)/distance * m);
         ctx.fillStyle = ray.vertical 
             ? COLORS.wallDark
             : COLORS.wall;
