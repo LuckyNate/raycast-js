@@ -92,27 +92,8 @@ function fadeScreen(){
 }
 
 //=====================================================
-function tileClip(){
-    let nexty = player.y + Math.sin(player.angle) * player.speed;
-    let nextx = player.x + Math.cos(player.angle) * player.speed;
-
-    let ytile = Math.floor(nexty/m);
-    let xtile = Math.floor(nextx/m); 
-
-    if(map[ytile][xtile] === 0){
-        player.y = nexty;
-        player.x = nextx;
-    }
-    else{
-        let disty = getHCollision(player.angle);
-        let distx = getVCollision(player.angle);
-        console.log(disty, distx)
-        distx.distance >= disty.distance
-            ? player.x = nextx
-            : player.y = nexty;
-    }
-}
-
+// PLAYER MOVEMENT
+//=====================================================
 function movePlayer(){
     tileClip();
     if(outOfMapBounds(player.x, player.y)){
@@ -134,9 +115,40 @@ function movePlayer(){
 
 //=====================================================
 
+function tileClip(){
+    let nexty = player.y + Math.sin(player.angle) * player.speed;
+    let nextx = player.x + Math.cos(player.angle) * player.speed;
+
+    let ytile = Math.floor(nexty/m);
+    let xtile = Math.floor(nextx/m); 
+
+    let disty = getHCollision(player.angle);
+    let distx = getVCollision(player.angle);
+
+    let intersecty = player.y + disty.distance;
+    let intersectx = player.x + distx.distance;
+
+    
+    if(distx.distance >= player.size && disty.distance >= player.size){
+        if(map[ytile][xtile] === 0){
+            player.y = nexty;
+            player.x = nextx;
+        }
+        else{
+            distx.distance < disty.distance
+                ? player.x += intersectx-player.size
+                : player.y += intersecty-player.size;   
+        }
+    }
+}
+
+//=====================================================
+
 function outOfMapBounds(x,y){
     return x<0 || x>= map[0].length || y<0 || y>= map.length;
 }
+
+//=====================================================
 
 function distance(x1, y1, x2, y2){
     return Math.sqrt(Math.pow(x2-x1,2) + Math.pow(y2-y1,2));
@@ -319,15 +331,15 @@ function toRadians(deg){
 }
 
 //=====================================================
-
+// *****MAIN GAME LOOP*****
+//===================================================== 9
 function gameLoop(){
     requestAnimationFrame(gameLoop);
     clearScreen();
     movePlayer();
     const rays = getRays();
     renderScene(rays);
-    renderMinimap(0,0,0.01,rays);
-    fadeScreen();
+    renderMinimap(0,0,0.02,rays);
 }
 
 requestAnimationFrame(gameLoop);
@@ -338,7 +350,7 @@ requestAnimationFrame(gameLoop);
 
 document.addEventListener("keydown", (e) =>{
     const fps = 60;
-    walkSpeed = 2.4*m;
+    walkSpeed = 2.5*m;
     runSpeed = 5.0*m;
 
     if(e.key === "w"){
