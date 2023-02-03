@@ -53,6 +53,13 @@ const testmap = [
     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 ];
 
+//======================================================//
+//LOCK THE MOUSE CURSOR AND USE IT TO CONTROL PLAYER
+//======================================================//
+canvas.addEventListener("click", async () => {
+    await canvas.requestPointerLock();
+  });
+//======================================================//
 function newmap(sizex, sizey){
     tempmap = [];
     for(let y = 0; y < sizey; y++){
