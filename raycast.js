@@ -1,4 +1,4 @@
-/* index.js for JS-RAYCAST         
+/* raycast.js for JS-RAYCAST         
 Tim Perfect Software Industries  
 ==============================================
 adapted and improved from tutorial at:
@@ -71,7 +71,7 @@ let map = newmap(20,20);
 //=====================================================
 
 const player = {
-    x: CELL_SIZE * map[0].length/2,
+    x: CELL_SIZE * map[0].length/5,
     y: CELL_SIZE * map.length/2,
     angle: 0,
     speed: 0,
