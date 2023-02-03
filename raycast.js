@@ -79,7 +79,7 @@ let map = newmap(20,20);
 
 const player = {
     x: CELL_SIZE * map[0].length/5,
-    y: CELL_SIZE * map.length/2,
+    y: CELL_SIZE * map.length/5,
     angle: 0,
     speed: 0,
     size: 0.5*m,
